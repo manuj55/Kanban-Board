@@ -2,6 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import helmet from 'helmet'
 import morgan from 'morgan'
+import { taskRoutes } from './routes/tasks'
 import { errorHandler } from './middleware/errorHandler'
 
 const app = express()
@@ -19,8 +20,8 @@ app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() })
 })
 
-// Routes (to be added)
-// app.use('/api/tasks', taskRoutes)
+// Routes
+app.use('/api/tasks', taskRoutes)
 
 // Error handler (must be last)
 app.use(errorHandler)
