@@ -1,7 +1,7 @@
-# CLAUDE.md
+# GEMINI.md
 
 ## File Exploration
-- Use Glob/Read/Grep tools instead of shell commands for file exploration. 
+- Use Glob/Read/Grep tools instead of shell commands for file exploration.
 
 ## Development Workflow
 
@@ -30,14 +30,14 @@
 
 5. **Before creating a PR**
    ```bash
-   npm run lint:claude && npm run test
+   npm run lint && npm run test
    ```
 
 ## Skills
 
 This repository has additional agent skills installed under `.agents/skills/`.
 
-Use the relevant skill before making changes in areas it covers, especially for React, Next.js, UI design, deployment, and Vercel workflows.[page:1][page:2]
+Use the relevant skill before making changes in areas it covers, especially for React, Next.js, UI design, deployment, and Vercel workflows.
 
 ### Installed skills
 
@@ -68,14 +68,14 @@ Use the relevant skill before making changes in areas it covers, especially for 
 
 ### React and Next.js
 
-Before creating or refactoring React or Next.js code, consult `vercel-react-best-practices`, which is a Vercel-maintained guide with 62 rules across 8 priority categories including async waterfalls, bundle size, server-side performance, client-side fetching, and re-render optimization.[page:2]
+Before creating or refactoring React or Next.js code, consult `vercel-react-best-practices`, which is a Vercel-maintained guide with 62 rules across 8 priority categories including async waterfalls, bundle size, server-side performance, client-side fetching, and re-render optimization.
 
-Apply these patterns when relevant:[page:2]
+Apply these patterns when relevant:
 
-- Prefer parallel async work with `Promise.all()` when tasks are independent.[page:2]
-- Avoid barrel imports when direct imports reduce bundle size.[page:2]
-- Use dynamic imports for heavy components.[page:2]
-- Minimize unnecessary client-side serialization and re-renders.[page:2]
+- Prefer parallel async work with `Promise.all()` when tasks are independent.
+- Avoid barrel imports when direct imports reduce bundle size.
+- Use dynamic imports for heavy components.
+- Minimize unnecessary client-side serialization and re-renders.
 
 ### Node.js and Express
 
@@ -108,7 +108,7 @@ Before starting design work or generating screens, consult `stitch-design` and `
 
 ### Design and composition
 
-When working on UI, layout, or app structure, check these skills first:[page:1]
+When working on UI, layout, or app structure, check these skills first:
 
 - `web-design-guidelines`
 - `vercel-composition-patterns`
@@ -116,16 +116,16 @@ When working on UI, layout, or app structure, check these skills first:[page:1]
 
 ## Design Guidelines
 
-Always read [DESIGN.md](technical-interview/DESIGN.md) before implementing any UI.
+Always read [DESIGN.md](DESIGN.md) before implementing any UI.
 
-[DESIGN.md](technical-interview/DESIGN.md) is the single source of truth for all visual and interaction decisions in this project. It covers typography, color tokens, spacing, component patterns, and layout conventions.
+[DESIGN.md](DESIGN.md) is the single source of truth for all visual and interaction decisions in this project. It covers typography, color tokens, spacing, component patterns, and layout conventions.
 
 ### Rules
 
-- Never introduce new colors, fonts, or spacing values not defined in [DESIGN.md](technical-interview/DESIGN.md).
-- All new UI components must conform to the patterns and tokens specified in [DESIGN.md](technical-interview/DESIGN.md).
-- When in doubt about a visual decision, defer to [DESIGN.md](technical-interview/DESIGN.md) over personal judgment or external references.
-- If a design decision is not covered in [DESIGN.md](technical-interview/DESIGN.md), flag it before implementing rather than improvising.
+- Never introduce new colors, fonts, or spacing values not defined in [DESIGN.md](DESIGN.md).
+- All new UI components must conform to the patterns and tokens specified in [DESIGN.md](DESIGN.md).
+- When in doubt about a visual decision, defer to [DESIGN.md](DESIGN.md) over personal judgment or external references.
+- If a design decision is not covered in [DESIGN.md](DESIGN.md), flag it before implementing rather than improvising.
 
 ## Practical conventions
 
@@ -134,6 +134,24 @@ Always read [DESIGN.md](technical-interview/DESIGN.md) before implementing any U
 - Prefer existing project conventions over introducing new tooling.
 - For deployment-related tasks, default to preview deployments.
 - For React and Next.js work, optimize for performance, bundle size, and reduced waterfalls.
+
+## Gemini CLI Usage
+
+### Context loading
+When starting a session, Gemini CLI automatically reads this file. To provide additional context:
+```bash
+gemini -f DESIGN.md -f client/src/types/index.ts
+```
+
+### Useful flags
+- `gemini --sandbox` — run with sandboxed file access for safe exploration.
+- `gemini -y` — auto-approve safe tool calls to reduce prompts.
+
+### Session conventions
+- Always run `npm run typecheck && npm run lint` after making changes.
+- For server work: `npm run test --prefix server`
+- For client work: `npm run test --prefix client`
+- Full validation: `npm run typecheck && npm run lint && npm run test --prefix client && npm run test --prefix server`
 
 ## Examples
 
@@ -150,7 +168,7 @@ Before implementing a new page or component, review:
 ```
 
 ### General rule
-If a task matches an installed skill, use that skill’s guidance before making changes.
+If a task matches an installed skill, use that skill's guidance before making changes.
 
 
 ## Testing Rules

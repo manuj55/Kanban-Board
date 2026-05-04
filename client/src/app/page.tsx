@@ -1,9 +1,9 @@
+import KanbanBoard from '@/components/board/KanbanBoard';
+
 export default function Home() {
   return (
-    <main className="flex min-h-dvh items-center justify-center">
-      <h1 className="font-display text-headline-lg font-bold text-on-surface">
-        Neura Kanban
-      </h1>
-    </main>
+    <div className="bg-background min-h-screen flex flex-col">
+      <KanbanBoard />
+    </div>
   )
 }
