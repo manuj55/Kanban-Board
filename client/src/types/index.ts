@@ -17,6 +17,9 @@ export interface Task {
   teamId?: string // optional now, required when bonus is built
   createdAt: string
   updatedAt: string
+  // UI-only snapshot fields for optimistic update rollback (never sent to server)
+  _prevStatus?: TaskStatus
+  _prevOrder?: number
 }
 
 // ─── Form Input (what CreateTaskForm submits) ───

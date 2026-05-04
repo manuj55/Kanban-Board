@@ -9,7 +9,8 @@
     "lint": "eslint",
     "lint:fix": "eslint --fix",
     "typecheck": "tsc --noEmit",
-    "format": "prettier --write \"src/**/*.{ts,tsx,css,mjs}\""
+    "format": "prettier --write \"src/**/*.{ts,tsx,css,mjs}\"",
+    "test": "vitest run"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.11.2",
