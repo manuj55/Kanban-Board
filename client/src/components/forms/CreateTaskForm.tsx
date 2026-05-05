@@ -86,14 +86,14 @@ export default function CreateTaskForm() {
     };
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-lg">
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-md">
             {error && (
-                <div className="border border-error/50 bg-error/10 text-error text-body-sm rounded px-md py-sm">
+                <div className="border border-error/40 bg-error-container text-on-error-container text-body-sm rounded px-md py-sm">
                     {error}
                 </div>
             )}
 
-            <FormField label="Title" htmlFor="title" error={errors.title?.message}>
+            <FormField label="Title *" htmlFor="title" error={errors.title?.message}>
                 <Input
                     id="title"
                     placeholder="Task title"
@@ -130,7 +130,7 @@ export default function CreateTaskForm() {
                 />
             </FormField>
 
-            <FormField label="Due date" htmlFor="dueDate" error={errors.dueDate?.message}>
+            <FormField label="Due date *" htmlFor="dueDate" error={errors.dueDate?.message}>
                 <Input
                     id="dueDate"
                     type="date"
@@ -140,7 +140,7 @@ export default function CreateTaskForm() {
                 />
             </FormField>
 
-            <div className="flex items-center justify-end gap-sm">
+            <div className="flex items-center justify-end gap-sm pt-xs">
                 <Button
                     type="button"
                     className="border border-outline-variant/40 text-on-surface bg-transparent hover:bg-surface-container-low"
@@ -151,7 +151,7 @@ export default function CreateTaskForm() {
                 </Button>
                 <Button
                     type="submit"
-                    className="bg-primary-container text-on-primary-container hover:shadow-[0_0_12px_var(--color-primary-container)]"
+                    className="bg-primary-container text-on-primary-container hover:brightness-95"
                     disabled={isBusy}
                 >
                     {isBusy ? 'Creating…' : 'Create task'}

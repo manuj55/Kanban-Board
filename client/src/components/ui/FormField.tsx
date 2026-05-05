@@ -19,7 +19,7 @@ export default function FormField({
         <div className="flex flex-col gap-xs">
             <label
                 htmlFor={htmlFor}
-                className="text-label-md uppercase tracking-wider text-on-surface-variant"
+                className="text-label-sm font-medium text-on-surface-variant"
             >
                 {label}
             </label>

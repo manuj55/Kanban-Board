@@ -105,16 +105,16 @@ spacing:
 
 ## Brand & Style
 
-This design system is built on the principles of **Minimalism** and **Corporate Modernism**. It prioritizes cognitive clarity and task efficiency for professional project management. The aesthetic is characterized by high-quality whitespace, a restrained color palette, and a focus on utilitarian elegance.
+This design system is built on the principles of **Minimalism**, **Clarity**, and **Clean Efficiency**. It prioritizes cognitive clarity and task efficiency for professional project management. The aesthetic is characterized by light, breathable whitespace, a restrained teal-and-gray color palette, and a focus on utilitarian elegance that lets tasks take center stage.
 
-The target audience consists of project managers and developers who require a tool that recedes into the background, allowing their work to take center stage. The emotional response is one of calm, reliability, and structured order.
+The target audience consists of project managers and developers who require a tool that recedes into the background, allowing their work to take center stage. The emotional response is one of calm, clarity, reliability, and structured order—facilitated by a light, airy interface.
 
 ## Colors
 
-The color strategy uses a triad of Slate tones to define the structural hierarchy.
-- **Primary:** Teal (#0D9488) is used exclusively for primary actions and active states to draw immediate focus without overwhelming the eye.
-- **Surface & Background:** Light Slate (#F8FAFC) serves as the base canvas, while Dark Slate (#0F172A) is reserved for high-contrast sidebars or navigation panels to provide a grounded, professional frame.
-- **Text:** Hierarchy is established through Slate Grays. Use darker tones for headings and mid-tones for secondary meta-data to reduce visual noise.
+The color strategy uses **Teal as primary action** with light neutral backgrounds for maximum clarity.
+- **Primary:** Teal (#00685F) is used exclusively for primary actions, interactive elements, and active states to draw immediate focus without overwhelming the eye.
+- **Surface & Background:** Light Slate (#F5FAF8) serves as the base canvas. Cards and interactive elements use white (#FFFFFF) for maximum contrast and readability. Text contrasts are optimized for the light background.
+- **Text:** Hierarchy is established through Slate Grays. Use darker tones (#171D1C) for headings and mid-tones (#3D4947) for secondary meta-data to reduce visual noise and maintain readability.
 
 ## Typography
 
@@ -128,24 +128,53 @@ A strict 4px baseline grid ensures vertical rhythm. Spacing between cards in a c
 
 ## Elevation & Depth
 
-This design system uses **Tonal Layers** and **Low-Contrast Outlines** rather than heavy shadows. 
+This design system uses **Tonal Layers** and **Subtle Outlines** to create depth without heavy shadows (which cloud a light interface).
 
-- **Level 0 (Background):** Light Slate (#F8FAFC).
-- **Level 1 (Cards/Inputs):** White (#FFFFFF) with a 1px border in Slate-200. No shadow is used for static states.
-- **Level 2 (Hover/Active):** A very soft, diffused shadow (0px 4px 6px rgba(15, 23, 42, 0.05)) to indicate interactivity.
-- **Level 3 (Modals/Popovers):** A crisp 1px border with a medium ambient shadow to separate the element from the board.
+- **Level 0 (Background):** Light Slate (#F5FAF8) — the base canvas.
+- **Level 1 (Cards/Inputs):** White (#FFFFFF) with a 1px border in outline-variant (#BCC9C6). No shadow is used for static states, keeping the interface light and clean.
+- **Level 2 (Hover/Active):** A very soft, diffused shadow (0px 4px 6px rgba(0, 0, 0, 0.05)) to subtly indicate interactivity and hover states.
+- **Level 3 (Modals/Popovers):** A crisp 1px border with a light ambient shadow to separate the element from the board without visual heaviness.
 
 ## Shapes
 
-The shape language is primarily **Rounded**, striking a balance between the friendliness of consumer apps and the rigidity of enterprise software. 
+The shape language is **Subtly Rounded**, creating a modern, clean feel while maintaining professional structure.
 
-Specific radius overrides are applied to optimize the feel of different interactions: 10px for buttons to make them feel distinct and "clickable," and 8px for inputs and cards to maintain a structured, professional alignment within the grid.
+- **Small elements (checkboxes):** 4px radius
+- **Cards & Inputs:** 8px radius (balanced and structured)
+- **Buttons:** 10px radius (distinct and clickable)
 
 ## Components
 
-- **Buttons:** Primary buttons are solid Teal (#0D9488) with white text, using a 10px radius. Secondary buttons should be ghost-style with a Slate-200 border.
-- **Input Fields:** Use an 8px radius with a Slate-200 border. On focus, the border transitions to Teal with a soft 3px Teal glow (20% opacity).
-- **Kanban Cards:** White background, 12px radius, and a 1px Slate-200 border. Use a Teal accent bar (4px wide) on the left side to denote high-priority tasks.
-- **Chips/Tags:** Small, pill-shaped elements with a light tint of the category color and dark text for maximum legibility.
-- **Sidebar:** Dark Slate (#0F172A) background with Slate-400 text. Active links should use a Teal vertical indicator on the far left and white text.
-- **Checkboxes:** Square with a 4px radius, filling with Teal when checked.
+- **Buttons:** 
+  - **Primary:** Solid Teal (#00685F) background, white text, 10px radius, 150ms transition on hover
+  - **Secondary/Ghost:** Transparent with 1px outline-variant border, text in on-surface, 10px radius
+  - **States:** Hover (scale 1.02, bg tint), Active (scale 0.98), Focus (2px outline), Disabled (0.5 opacity)
+
+- **Input Fields:** 
+  - 8px radius, 1px outline-variant border (#BCC9C6)
+  - **Focus:** Border transitions to Teal (#00685F), 2px outline, soft 2px glow (rgba(0, 106, 95, 0.2))
+  - **Error:** Border becomes error red (#BA1A1A), red text for error message
+  - All transitions 150ms ease-out
+
+- **Task Cards (Kanban):** 
+  - White background (#FFFFFF), 8px radius, 1px outline-variant border
+  - 4px left accent bar in Teal for visual hierarchy
+  - **Hover:** Subtle shadow lift (0 4px 6px rgba(0,0,0,0.05)), bg tint (rgba(0, 106, 95, 0.02))
+  - **Dragging:** Opacity 0.5, scale 1.05, 150ms transition
+  - **Error shake:** ±5px horizontal animation, 200ms duration
+
+- **Drop Zone (Columns):** 
+  - **On drag over:** 2px dashed border in Teal, light background tint (rgba(0, 106, 95, 0.05))
+  - **Drop indicator line:** 2px solid Teal, animated pulse (2s)
+
+- **Form Elements:**
+  - **Labels:** Inter 12px, weight 500, letter-spacing 0.02em, color on-surface-variant
+  - **Placeholders:** Lighter text (on-surface-variant), fade on focus
+  - **Validation messages:** Error (12px, red), Success (12px, teal)
+
+- **Toast Notifications:**
+  - 320px width, 16px padding, 8px radius, 1px outline-variant border
+  - Slide in from bottom-right (200ms ease-out)
+  - **Success:** Green checkmark + 2s auto-dismiss
+  - **Error:** Red warning icon + 5s dismissible + [Retry] button
+  - **Info:** Blue info icon + 3s auto-dismiss
