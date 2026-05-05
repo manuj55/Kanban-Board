@@ -25,6 +25,7 @@ export interface Task {
 // ─── Form Input (what CreateTaskForm submits) ───
 export interface CreateTaskInput {
   title: string
+  status: TaskStatus
   description?: string
   dueDate: string
 }

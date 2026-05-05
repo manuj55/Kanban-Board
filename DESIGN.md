@@ -1,104 +1,96 @@
 ---
-name: Neura Kanban
+name: Efficient Flow
 colors:
-  surface: '#131313'
-  surface-dim: '#131313'
-  surface-bright: '#3a3939'
-  surface-container-lowest: '#0e0e0e'
-  surface-container-low: '#1c1b1b'
-  surface-container: '#201f1f'
-  surface-container-high: '#2a2a2a'
-  surface-container-highest: '#353534'
-  on-surface: '#e5e2e1'
-  on-surface-variant: '#c1c6d5'
-  inverse-surface: '#e5e2e1'
-  inverse-on-surface: '#313030'
-  outline: '#8b919e'
-  outline-variant: '#414753'
-  surface-tint: '#aac7ff'
-  primary: '#aac7ff'
-  on-primary: '#002f64'
-  primary-container: '#046bd2'
-  on-primary-container: '#ebefff'
-  inverse-primary: '#005db8'
-  secondary: '#bcc7de'
-  on-secondary: '#263143'
-  secondary-container: '#3e495d'
-  on-secondary-container: '#aeb9d0'
-  tertiary: '#ffb692'
-  on-tertiary: '#562000'
-  tertiary-container: '#b64d03'
-  on-tertiary-container: '#ffece5'
-  error: '#ffb4ab'
-  on-error: '#690005'
-  error-container: '#93000a'
-  on-error-container: '#ffdad6'
-  primary-fixed: '#d6e3ff'
-  primary-fixed-dim: '#aac7ff'
-  on-primary-fixed: '#001b3e'
-  on-primary-fixed-variant: '#00458d'
-  secondary-fixed: '#d8e3fb'
-  secondary-fixed-dim: '#bcc7de'
-  on-secondary-fixed: '#111c2d'
-  on-secondary-fixed-variant: '#3c475a'
-  tertiary-fixed: '#ffdbcb'
-  tertiary-fixed-dim: '#ffb692'
-  on-tertiary-fixed: '#341100'
-  on-tertiary-fixed-variant: '#793000'
-  background: '#131313'
-  on-background: '#e5e2e1'
-  surface-variant: '#353534'
+  surface: '#f5faf8'
+  surface-dim: '#d6dbd9'
+  surface-bright: '#f5faf8'
+  surface-container-lowest: '#ffffff'
+  surface-container-low: '#f0f5f2'
+  surface-container: '#eaefed'
+  surface-container-high: '#e4e9e7'
+  surface-container-highest: '#dee4e1'
+  on-surface: '#171d1c'
+  on-surface-variant: '#3d4947'
+  inverse-surface: '#2c3130'
+  inverse-on-surface: '#edf2f0'
+  outline: '#6d7a77'
+  outline-variant: '#bcc9c6'
+  surface-tint: '#006a61'
+  primary: '#00685f'
+  on-primary: '#ffffff'
+  primary-container: '#008378'
+  on-primary-container: '#f4fffc'
+  inverse-primary: '#6bd8cb'
+  secondary: '#565e74'
+  on-secondary: '#ffffff'
+  secondary-container: '#dae2fd'
+  on-secondary-container: '#5c647a'
+  tertiary: '#595c5e'
+  on-tertiary: '#ffffff'
+  tertiary-container: '#727577'
+  on-tertiary-container: '#fbfdff'
+  error: '#ba1a1a'
+  on-error: '#ffffff'
+  error-container: '#ffdad6'
+  on-error-container: '#93000a'
+  primary-fixed: '#89f5e7'
+  primary-fixed-dim: '#6bd8cb'
+  on-primary-fixed: '#00201d'
+  on-primary-fixed-variant: '#005049'
+  secondary-fixed: '#dae2fd'
+  secondary-fixed-dim: '#bec6e0'
+  on-secondary-fixed: '#131b2e'
+  on-secondary-fixed-variant: '#3f465c'
+  tertiary-fixed: '#e0e3e5'
+  tertiary-fixed-dim: '#c4c7c9'
+  on-tertiary-fixed: '#191c1e'
+  on-tertiary-fixed-variant: '#444749'
+  background: '#f5faf8'
+  on-background: '#171d1c'
+  surface-variant: '#dee4e1'
 typography:
-  headline-xl:
-    fontFamily: Space Grotesk
-    fontSize: 48px
-    fontWeight: '700'
-    lineHeight: '1.1'
-    letterSpacing: -0.02em
-  headline-lg:
-    fontFamily: Space Grotesk
+  h1:
+    fontFamily: Inter
     fontSize: 32px
     fontWeight: '600'
     lineHeight: '1.2'
-    letterSpacing: -0.01em
-  headline-md:
-    fontFamily: Space Grotesk
+    letterSpacing: -0.02em
+  h2:
+    fontFamily: Inter
     fontSize: 24px
     fontWeight: '600'
     lineHeight: '1.3'
-  body-lg:
+    letterSpacing: -0.01em
+  h3:
     fontFamily: Inter
     fontSize: 18px
-    fontWeight: '400'
-    lineHeight: '1.6'
-  body-md:
+    fontWeight: '600'
+    lineHeight: '1.4'
+    letterSpacing: 0em
+  body-lg:
     fontFamily: Inter
     fontSize: 16px
     fontWeight: '400'
-    lineHeight: '1.5'
-  body-sm:
+    lineHeight: '1.6'
+    letterSpacing: 0em
+  body-md:
     fontFamily: Inter
     fontSize: 14px
     fontWeight: '400'
     lineHeight: '1.5'
-  label-md:
-    fontFamily: Inter
-    fontSize: 12px
-    fontWeight: '600'
-    lineHeight: '1'
-    letterSpacing: 0.05em
+    letterSpacing: 0em
   label-sm:
     fontFamily: Inter
-    fontSize: 10px
-    fontWeight: '700'
+    fontSize: 12px
+    fontWeight: '500'
     lineHeight: '1'
-    letterSpacing: 0.08em
+    letterSpacing: 0.02em
 rounded:
-  sm: 0.125rem
-  DEFAULT: 0.25rem
-  md: 0.375rem
-  lg: 0.5rem
-  xl: 0.75rem
+  sm: 0.25rem
+  DEFAULT: 0.5rem
+  md: 0.75rem
+  lg: 1rem
+  xl: 1.5rem
   full: 9999px
 spacing:
   unit: 4px
@@ -106,76 +98,54 @@ spacing:
   sm: 8px
   md: 16px
   lg: 24px
-  xl: 48px
-  gutter: 20px
-  container-max: 1440px
+  xl: 32px
+  gutter: 16px
+  margin: 24px
 ---
 
 ## Brand & Style
 
-The design system is engineered for precision, drawing inspiration from high-end industrial robotics and cognitive automation. It targets professional teams who require a high-signal, low-noise environment for complex task management.
+This design system is built on the principles of **Minimalism** and **Corporate Modernism**. It prioritizes cognitive clarity and task efficiency for professional project management. The aesthetic is characterized by high-quality whitespace, a restrained color palette, and a focus on utilitarian elegance.
 
-The visual style is **Industrial Minimalism** blended with **Modern Corporate** precision. It utilizes high-contrast interfaces to maintain focus, with a "dark-first" aesthetic that mirrors technical command centers. The emotional response is one of controlled power, reliability, and cutting-edge intelligence. This is achieved through generous whitespace, razor-sharp alignment, and subtle technical accents like fine-line dividers and glows.
+The target audience consists of project managers and developers who require a tool that recedes into the background, allowing their work to take center stage. The emotional response is one of calm, reliability, and structured order.
 
 ## Colors
 
-The palette is anchored in a deep, tech-centric dark mode. 
-
-- **Primary**: A vibrant, high-fidelity blue (#046BD2) used for interactive states, progress indicators, and primary actions. It represents the "pulse" of the system.
-- **Surface & Secondary**: Deep slate (#1E293B) and obsidian (#111111) are used to create structural depth. 
-- **Typography & UI**: Pure white (#FFFFFF) is reserved for high-contrast text and critical icons to ensure maximum legibility against the dark backgrounds.
-- **Functional Grays**: Low-saturation grays are used for borders and disabled states to keep the focus on active content.
+The color strategy uses a triad of Slate tones to define the structural hierarchy.
+- **Primary:** Teal (#0D9488) is used exclusively for primary actions and active states to draw immediate focus without overwhelming the eye.
+- **Surface & Background:** Light Slate (#F8FAFC) serves as the base canvas, while Dark Slate (#0F172A) is reserved for high-contrast sidebars or navigation panels to provide a grounded, professional frame.
+- **Text:** Hierarchy is established through Slate Grays. Use darker tones for headings and mid-tones for secondary meta-data to reduce visual noise.
 
 ## Typography
 
-This design system utilizes a dual-font strategy to balance technical character with utilitarian readability. 
-
-**Space Grotesk** is used for headlines and prominent metrics, providing a geometric, futuristic feel that aligns with the robotics aesthetic. **Inter** is used for all body copy, task descriptions, and UI labels due to its exceptional clarity at small sizes and its neutral, systematic nature. 
-
-Hierarchy is strictly enforced through weight and letter spacing, with labels often utilizing uppercase styling to mimic technical spec sheets.
+This design system utilizes **Inter** for all text elements to ensure a systematic, utilitarian feel. The scale follows a tight modern hierarchy. Headlines use slightly tighter letter-spacing and semi-bold weights to appear authoritative, while body copy maintains generous line-heights to ensure readability during long periods of work. Labels use a medium weight for clarity at small sizes.
 
 ## Layout & Spacing
 
-The layout follows a **Fluid Grid** model with a 12-column structure for dashboard views and a specialized horizontal scroll system for Kanban boards. 
+The layout philosophy follows a **Fluid Grid** model for the Kanban board, allowing columns to scale based on the viewport width, while keeping a **Fixed Sidebar** at 260px. 
 
-A strict 4px baseline grid ensures every element is perfectly aligned. For the KanbanFlow application:
-- **Columns**: Have a fixed minimum width of 280px with a 20px gutter.
-- **Margins**: Side margins are adaptive, expanding to fill screen width while capping content at 1440px to maintain readability.
-- **Density**: Use "Comfortable" padding (24px) for landing pages and "Compact" padding (12px) for the functional task board to maximize information density.
+A strict 4px baseline grid ensures vertical rhythm. Spacing between cards in a column should be 12px, while the gutters between columns are fixed at 16px to maintain a dense but breathable information flow.
 
 ## Elevation & Depth
 
-Hierarchy is established through **Tonal Layering** and **Low-Contrast Outlines** rather than traditional heavy shadows.
+This design system uses **Tonal Layers** and **Low-Contrast Outlines** rather than heavy shadows. 
 
-- **Base Layer**: Pure #111111 for the application background.
-- **Surface Layer**: #1E293B for cards and sidebar containers, creating a subtle lift.
-- **Borders**: 1px solid borders using an opacity-reduced white (e.g., `rgba(255, 255, 255, 0.1)`) replace shadows for a cleaner, industrial look.
-- **Interaction Glow**: Interactive elements like active cards or primary buttons feature a soft outer glow (0px 0px 12px) in the primary blue color to simulate light-emitting diodes (LEDs) on a machine.
+- **Level 0 (Background):** Light Slate (#F8FAFC).
+- **Level 1 (Cards/Inputs):** White (#FFFFFF) with a 1px border in Slate-200. No shadow is used for static states.
+- **Level 2 (Hover/Active):** A very soft, diffused shadow (0px 4px 6px rgba(15, 23, 42, 0.05)) to indicate interactivity.
+- **Level 3 (Modals/Popovers):** A crisp 1px border with a medium ambient shadow to separate the element from the board.
 
 ## Shapes
 
-The shape language is "Soft-Technical." Elements use a subtle **0.25rem (4px)** corner radius to maintain a crisp, engineered appearance without the harshness of 0px corners. 
+The shape language is primarily **Rounded**, striking a balance between the friendliness of consumer apps and the rigidity of enterprise software. 
 
-Larger containers or specialized UI elements like "Add Task" buttons may use `rounded-lg` (8px) for a slightly softer touch, but the overall aesthetic avoids rounded or pill-shaped elements to maintain its professional, industrial character.
+Specific radius overrides are applied to optimize the feel of different interactions: 10px for buttons to make them feel distinct and "clickable," and 8px for inputs and cards to maintain a structured, professional alignment within the grid.
 
 ## Components
 
-### Buttons
-- **Primary**: Solid blue (#046BD2) with white text. On hover, apply a soft blue glow.
-- **Ghost**: Transparent background with a 1px white border. Used for secondary actions like "Cancel" or "Archive."
-
-### Cards (Task Items)
-- Background: #1E293B.
-- Border: 1px subtle gray. 
-- Technical Detail: A 2px vertical accent bar on the left edge indicates task priority or status.
-
-### Kanban Columns
-- Headers: Large uppercase labels in Space Grotesk.
-- Background: Transparent with a dashed 1px border at the top and bottom to define the lane.
-
-### Input Fields & Controls
-- Focus State: Border transitions from soft gray to the primary blue with a 2px glow.
-- Checkboxes: Square with sharp 2px corners; when checked, they fill with the primary blue and a white checkmark.
-
-### Progress Indicators
-- Linear bars with a "glowing" leading edge to suggest movement and robotic precision.
+- **Buttons:** Primary buttons are solid Teal (#0D9488) with white text, using a 10px radius. Secondary buttons should be ghost-style with a Slate-200 border.
+- **Input Fields:** Use an 8px radius with a Slate-200 border. On focus, the border transitions to Teal with a soft 3px Teal glow (20% opacity).
+- **Kanban Cards:** White background, 12px radius, and a 1px Slate-200 border. Use a Teal accent bar (4px wide) on the left side to denote high-priority tasks.
+- **Chips/Tags:** Small, pill-shaped elements with a light tint of the category color and dark text for maximum legibility.
+- **Sidebar:** Dark Slate (#0F172A) background with Slate-400 text. Active links should use a Teal vertical indicator on the far left and white text.
+- **Checkboxes:** Square with a 4px radius, filling with Teal when checked.

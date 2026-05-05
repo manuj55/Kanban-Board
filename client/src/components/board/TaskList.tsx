@@ -32,11 +32,11 @@ export default function TaskList({ status }: TaskListProps) {
             </SortableContext>
 
             {showSkeleton && (
-                <div className="h-24 bg-surface-container rounded animate-pulse" />
+                <div className="h-24 bg-surface-container-low rounded animate-pulse" />
             )}
 
             {showEmpty && (
-                <div className="flex flex-col items-center justify-center p-md border border-dashed border-outline-variant rounded text-on-surface-variant text-body-sm">
+                <div className="flex flex-col items-center justify-center p-md border border-dashed border-outline-variant/40 rounded text-on-surface-variant text-body-sm">
                     No tasks left
                 </div>
             )}

@@ -92,7 +92,9 @@ describe('tasksSlice', () => {
       vi.mocked(api.post).mockResolvedValueOnce({ data: newTask })
 
       const store = createTestStore({ tasks: [mockTask({ _id: '1' })] })
-      await store.dispatch(createTask({ title: 'New Task', dueDate: '2026-06-01' }))
+      await store.dispatch(
+        createTask({ title: 'New Task', status: 'todo', dueDate: '2026-06-01' }),
+      )
 
       expect(store.getState().tasks.tasks).toHaveLength(2)
       expect(store.getState().tasks.tasks[1]).toEqual(newTask)

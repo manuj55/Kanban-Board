@@ -14,6 +14,12 @@ interface TaskCardProps {
 export default function TaskCard({ task }: TaskCardProps) {
     const dispatch = useAppDispatch();
     const [menuOpen, setMenuOpen] = useState(false);
+    const accentClass =
+        task.status === 'todo'
+            ? 'accent-bar-todo'
+            : task.status === 'in-progress'
+                ? 'accent-bar-in-progress'
+                : 'accent-bar-done';
 
     const {
         attributes,
@@ -42,15 +48,12 @@ export default function TaskCard({ task }: TaskCardProps) {
         <div
             ref={setNodeRef}
             style={style}
-            className={`relative group bg-surface-container-low border border-outline-variant/10 rounded overflow-visible transition-shadow ${isDragging ? 'opacity-50 shadow-[0_0_12px_var(--color-primary)]' : ''
+            className={`relative group bg-surface-container-lowest border border-outline-variant/40 rounded-lg overflow-visible transition-colors ${accentClass} ${isDragging ? 'border-primary-container shadow-soft' : 'hover:border-primary-container/60'
                 }`}
         >
-            {/* 2px left accent bar */}
-            <div className="absolute top-0 bottom-0 left-0 w-[2px] bg-primary group-hover:shadow-[0_0_12px_var(--color-primary)] transition-shadow" />
-
-            <div className="p-md pl-lg" {...attributes} {...listeners}>
+            <div className="p-md" {...attributes} {...listeners}>
                 <div className="flex justify-between items-start gap-sm mb-xs">
-                    <h4 className="text-body-md font-medium text-on-surface line-clamp-2">
+                    <h4 className="text-body-md font-semibold text-on-surface line-clamp-2">
                         {task.title}
                     </h4>
 
@@ -66,7 +69,7 @@ export default function TaskCard({ task }: TaskCardProps) {
                             •••
                         </button>
                         {menuOpen && (
-                            <div className="absolute right-0 top-full mt-xs bg-surface-container border border-outline-variant rounded shadow-lg z-10 w-32 py-xs">
+                            <div className="absolute right-0 top-full mt-xs bg-surface-container-lowest border border-outline-variant/40 rounded shadow-soft z-10 w-32 py-xs">
                                 {task.status !== 'todo' && (
                                     <button onClick={() => handleMove('todo')} className="w-full text-left px-sm py-[2px] text-body-sm text-on-surface hover:bg-surface-bright">Move to To Do</button>
                                 )}
@@ -89,7 +92,7 @@ export default function TaskCard({ task }: TaskCardProps) {
                     </p>
                 )}
 
-                <div className="flex items-center text-label-sm text-on-surface-variant uppercase tracking-wider font-bold">
+                <div className="flex items-center text-label-sm text-on-surface-variant uppercase tracking-wider font-semibold">
                     {new Date(task.dueDate).toLocaleDateString()}
                 </div>
             </div>

@@ -9,16 +9,16 @@ interface KanbanColumnProps {
 
 export default function KanbanColumn({ status, title }: KanbanColumnProps) {
     return (
-        <div className="flex flex-col min-w-[280px] w-[350px] shrink-0">
+        <div className="flex flex-col w-full md:min-w-[280px] md:w-[320px] shrink-0">
             {/* Header */}
-            <div className="border-t border-b border-dashed border-outline-variant/30 py-sm mb-md flex items-center justify-between">
-                <h2 className="font-display font-bold text-headline-md tracking-tight uppercase text-on-surface">
+            <div className="border-t border-b border-dashed border-outline-variant/40 py-xs mb-sm flex items-center justify-between">
+                <h2 className="font-display font-semibold text-body-md tracking-wider uppercase text-on-surface">
                     {title}
                 </h2>
             </div>
 
             {/* Task List (Droppable area) */}
-            <div className="flex-1 bg-surface-container-lowest/50 rounded p-sm">
+            <div className="flex-1 pt-sm">
                 <TaskList status={status} />
             </div>
         </div>
