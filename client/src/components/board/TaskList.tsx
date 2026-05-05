@@ -7,12 +7,14 @@ import { selectTasksByStatus, selectTasksLoading } from '@/store/slices/tasksSli
 import type { TaskStatus } from '@/types';
 import TaskCard from './TaskCard';
 import DropIndicator from './DropIndicator';
+import SkeletonCard from './SkeletonCard';
 
 interface TaskListProps {
     status: TaskStatus;
+    isValidDropZone: boolean;
 }
 
-export default function TaskList({ status }: TaskListProps) {
+export default function TaskList({ status, isValidDropZone }: TaskListProps) {
     const loading = useAppSelector(selectTasksLoading);
     const tasks = useAppSelector(selectTasksByStatus(status));
 
@@ -21,7 +23,7 @@ export default function TaskList({ status }: TaskListProps) {
     const showEmpty = !loading && tasks.length === 0;
 
     return (
-        <div className="flex flex-col gap-sm min-h-full">
+        <div className={`flex flex-col gap-sm min-h-full transition-all duration-200 ${isValidDropZone ? 'gap-md' : ''}`}>
             <SortableContext
                 items={tasks.map((t) => t._id)}
                 strategy={verticalListSortingStrategy}
@@ -32,7 +34,11 @@ export default function TaskList({ status }: TaskListProps) {
             </SortableContext>
 
             {showSkeleton && (
-                <div className="h-24 bg-surface-container-low rounded animate-pulse" />
+                <>
+                    <SkeletonCard />
+                    <SkeletonCard />
+                    <SkeletonCard />
+                </>
             )}
 
             {showEmpty && (
@@ -41,8 +47,8 @@ export default function TaskList({ status }: TaskListProps) {
                 </div>
             )}
 
-            {/* Invisible drop zone when empty to allow dragging into empty columns */}
-            <DropIndicator status={status} />
+            {/* Drop zone - visible when valid drop target */}
+            <DropIndicator status={status} forceVisible={isValidDropZone && tasks.length === 0} />
         </div>
     );
 }

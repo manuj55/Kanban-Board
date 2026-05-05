@@ -127,6 +127,33 @@ Always read [DESIGN.md](technical-interview/DESIGN.md) before implementing any U
 - When in doubt about a visual decision, defer to [DESIGN.md](technical-interview/DESIGN.md) over personal judgment or external references.
 - If a design decision is not covered in [DESIGN.md](technical-interview/DESIGN.md), flag it before implementing rather than improvising.
 
+## Next.js App Router Rules
+
+**CRITICAL: Always add `'use client'` directive when components use:**
+- React hooks (`useState`, `useEffect`, `useContext`, `useRef`, etc.)
+- Custom hooks that use React hooks internally
+- Event handlers (`onClick`, `onChange`, etc.)
+- Browser APIs (`window`, `document`, `localStorage`, etc.)
+- Third-party libraries that require client-side execution
+
+**Why this matters:**
+- Next.js 15 App Router defaults to Server Components
+- Tests run in Node.js and DON'T catch Server/Client Component errors
+- Runtime errors only appear when running the dev server (`npm run dev`)
+- Always test in browser after making component changes
+
+**Examples:**
+```tsx
+'use client';  // ← REQUIRED when using hooks or event handlers
+
+import { useState } from 'react';
+
+export default function MyComponent() {
+  const [count, setCount] = useState(0);
+  return <button onClick={() => setCount(count + 1)}>{count}</button>;
+}
+```
+
 ## Practical conventions
 
 - Check `.agents/skills/` for relevant guidance before implementing major changes.

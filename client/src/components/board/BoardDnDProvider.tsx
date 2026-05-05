@@ -9,17 +9,36 @@ import {
     useSensor,
     useSensors,
     type DragEndEvent,
+    type DragStartEvent,
 } from '@dnd-kit/core';
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
+import { toast } from 'sonner';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { updateTask, fetchTasks } from '@/store/slices/tasksSlice';
+import { DragProvider, useDrag } from './DragContext';
+import { MenuProvider, useMenu } from './MenuContext';
 
-export default function BoardDnDProvider({ children }: { children: React.ReactNode }) {
+function BoardDnDProviderInner({ children }: { children: React.ReactNode }) {
     const dispatch = useAppDispatch();
     const tasks = useAppSelector((state) => state.tasks.tasks);
+    const { setDragState } = useDrag();
+    const { setOpenMenuId } = useMenu();
 
     useEffect(() => {
-        dispatch(fetchTasks());
+        const loadTasks = async () => {
+            try {
+                await dispatch(fetchTasks()).unwrap();
+            } catch (error) {
+                const message = error instanceof Error ? error.message : 'Failed to load tasks';
+                toast.error(message, {
+                    action: {
+                        label: 'Retry',
+                        onClick: () => dispatch(fetchTasks()),
+                    },
+                });
+            }
+        };
+        loadTasks();
     }, [dispatch]);
 
     const sensors = useSensors(
@@ -39,7 +58,17 @@ export default function BoardDnDProvider({ children }: { children: React.ReactNo
         });
     }
 
+    const handleDragStart = (event: DragStartEvent) => {
+        const activeId = event.active.id as string;
+        const activeTask = tasks.find((t) => t._id === activeId);
+
+        setDragState(true, activeTask?.status ?? null);
+        setOpenMenuId(null); // Close all menus when drag starts
+    };
+
     const handleDragEnd = (event: DragEndEvent) => {
+        setDragState(false, null);
+
         const { active, over } = event;
         if (!over) return;
 
@@ -75,15 +104,51 @@ export default function BoardDnDProvider({ children }: { children: React.ReactNo
         }
 
         if (activeTask.status !== targetStatus || activeTask.order !== targetOrder) {
+            const columnChanged = activeTask.status !== targetStatus;
+            const columnName =
+                targetStatus === 'todo' ? 'To Do' :
+                targetStatus === 'in-progress' ? 'In Progress' :
+                'Done';
+
             dispatch(
                 updateTask({ id: activeId, status: targetStatus, order: targetOrder })
-            );
+            ).unwrap()
+                .then(() => {
+                    // Only show toast if column changed (not just reordering)
+                    if (columnChanged) {
+                        toast.success(`Moved to ${columnName}`);
+                    }
+                })
+                .catch((error) => {
+                    const message = error instanceof Error ? error.message : 'Failed to move task';
+                    toast.error(message, {
+                        action: {
+                            label: 'Retry',
+                            onClick: () => dispatch(updateTask({ id: activeId, status: targetStatus, order: targetOrder })),
+                        },
+                    });
+                });
         }
     };
 
     return (
-        <DndContext sensors={sensors} collisionDetection={closestCorners} onDragEnd={handleDragEnd}>
+        <DndContext
+            sensors={sensors}
+            collisionDetection={closestCorners}
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
+        >
             {children}
         </DndContext>
+    );
+}
+
+export default function BoardDnDProvider({ children }: { children: React.ReactNode }) {
+    return (
+        <DragProvider>
+            <MenuProvider>
+                <BoardDnDProviderInner>{children}</BoardDnDProviderInner>
+            </MenuProvider>
+        </DragProvider>
     );
 }

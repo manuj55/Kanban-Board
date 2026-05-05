@@ -6,9 +6,10 @@ import type { TaskStatus } from '@/types';
 
 interface DropIndicatorProps {
     status: TaskStatus;
+    forceVisible?: boolean;
 }
 
-export default function DropIndicator({ status }: DropIndicatorProps) {
+export default function DropIndicator({ status, forceVisible = false }: DropIndicatorProps) {
     const { setNodeRef, isOver } = useDroppable({
         id: `placeholder-${status}`,
         data: {
@@ -17,13 +18,16 @@ export default function DropIndicator({ status }: DropIndicatorProps) {
         },
     });
 
+    const isVisible = isOver || forceVisible;
+
     return (
         <div
             ref={setNodeRef}
-            className={`min-h-[100px] w-full rounded border-2 border-dashed transition-colors ${isOver
-                    ? 'border-primary bg-primary/10'
+            className={`min-h-[100px] w-full rounded-lg border-2 border-dashed transition-all duration-200 ease-out ${
+                isVisible
+                    ? 'border-primary bg-primary/5'
                     : 'border-transparent' // Invisible normally
-                }`}
+            }`}
         />
     );
 }

@@ -9,6 +9,7 @@ export interface CreateTaskBody {
   title: string
   description?: string
   dueDate: string // ISO 8601 string from client
+  status?: TaskStatus
 }
 
 // ─── API request body for moving/updating a task ───

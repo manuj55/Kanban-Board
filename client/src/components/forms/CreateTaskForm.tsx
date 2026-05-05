@@ -39,7 +39,13 @@ const createTaskSchema = z.object({
         .optional(),
     dueDate: z
         .string()
-        .refine((value) => !Number.isNaN(Date.parse(value)), 'Due date is required'),
+        .refine((value) => !Number.isNaN(Date.parse(value)), 'Due date is required')
+        .refine((value) => {
+            const date = new Date(value);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            return date >= today;
+        }, 'Due date cannot be in the past'),
 });
 
 type CreateTaskFormValues = z.infer<typeof createTaskSchema>;
@@ -152,9 +158,10 @@ export default function CreateTaskForm() {
                 <Button
                     type="submit"
                     className="bg-primary-container text-on-primary-container hover:brightness-95"
-                    disabled={isBusy}
+                    loading={isBusy}
+                    loadingText="Creating…"
                 >
-                    {isBusy ? 'Creating…' : 'Create task'}
+                    Create task
                 </Button>
             </div>
         </form>

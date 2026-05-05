@@ -25,11 +25,24 @@ export const validateCreateTask = [
     .withMessage('Title is required')
     .isLength({ max: 100 })
     .withMessage('Title cannot exceed 100 characters'),
+  body('status')
+    .optional()
+    .isIn(['todo', 'in-progress', 'done'])
+    .withMessage('Status must be todo, in-progress, or done'),
   body('dueDate')
     .notEmpty()
     .withMessage('Due date is required')
     .isISO8601()
-    .withMessage('Due date must be a valid ISO 8601 date'),
+    .withMessage('Due date must be a valid ISO 8601 date')
+    .custom((value) => {
+      const date = new Date(value);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      if (date < today) {
+        throw new Error('Due date cannot be in the past');
+      }
+      return true;
+    }),
   body('description')
     .optional()
     .trim()

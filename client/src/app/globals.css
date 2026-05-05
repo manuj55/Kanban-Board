@@ -189,4 +189,58 @@
   .shadow-soft {
     box-shadow: 0 4px 6px color-mix(in srgb, var(--color-outline) 18%, transparent);
   }
+
+  /* Skeleton loading animation */
+  @keyframes shimmer {
+    0% { background-position: -1000px 0; }
+    100% { background-position: 1000px 0; }
+  }
+
+  .skeleton-card {
+    @apply rounded-lg h-24 w-full mb-3;
+    background: linear-gradient(
+      90deg,
+      var(--color-surface-container-low) 0%,
+      var(--color-surface-container) 50%,
+      var(--color-surface-container-low) 100%
+    );
+    background-size: 1000px 100%;
+    animation: shimmer 2s infinite linear;
+  }
+
+  /* Shake animation for error feedback */
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+  }
+
+  .animate-shake {
+    animation: shake 200ms ease-in-out;
+  }
+
+  /* Spinner animation */
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .animate-spin {
+    animation: spin 1s linear infinite;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RESPONSIVE & TOUCH OPTIMIZATION
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Only apply hover effects on devices that support hover (non-touch) */
+@media (hover: none) {
+  /* Remove hover scale effects on touch devices to prevent sticky states */
+  .hover\:scale-\[1\.02\]:hover {
+    transform: none;
+  }
+
+  .hover\:shadow-soft:hover {
+    box-shadow: none;
+  }
 }

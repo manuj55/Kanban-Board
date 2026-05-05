@@ -17,14 +17,15 @@ router.get('/', async (_req: Request, res: Response) => {
   res.json(tasks)
 })
 
-// POST / — create task (always 'todo', order = bottom of column)
+// POST / — create task with specified status (defaults to 'todo')
 router.post('/', validateCreateTask, async (req: Request, res: Response) => {
-  const { title, description, dueDate } = req.body as CreateTaskBody
-  const order = await Task.countDocuments({ status: 'todo' })
+  const { title, description, dueDate, status } = req.body as CreateTaskBody
+  const taskStatus = status || 'todo'
+  const order = await Task.countDocuments({ status: taskStatus })
   const task = await Task.create({
     title,
     description: description || '',
-    status: 'todo',
+    status: taskStatus,
     order,
     dueDate: new Date(dueDate),
   })
@@ -94,7 +95,42 @@ router.patch(
       return res.json(updatedTask)
     }
 
-    // If not moving columns, just update fields
+    // If not moving columns, check if reordering within same column
+    const isSameColumnReorder = body.order !== undefined && body.order !== currentTask.order
+
+    if (isSameColumnReorder) {
+      // Get all tasks in current column sorted by order
+      const columnTasks = await Task.find({
+        status: currentTask.status,
+        _id: { $ne: id },
+      }).sort({ order: 1 })
+
+      const targetOrder = Math.max(0, Math.min(body.order!, columnTasks.length))
+
+      // Reindex: remove current task, insert at new position
+      for (let i = 0; i < columnTasks.length; i++) {
+        const newOrder = i < targetOrder ? i : i + 1
+        await Task.updateOne(
+          { _id: columnTasks[i]._id },
+          { order: newOrder },
+        )
+      }
+
+      // Update current task with new order and any other fields
+      const updates: Record<string, unknown> = { order: targetOrder }
+      if (body.title !== undefined) updates.title = body.title
+      if (body.description !== undefined) updates.description = body.description
+      if (body.dueDate !== undefined) updates.dueDate = new Date(body.dueDate)
+
+      const updatedTask = await Task.findByIdAndUpdate(id, updates, {
+        new: true,
+        runValidators: true,
+      })
+
+      return res.json(updatedTask)
+    }
+
+    // Just update fields without reordering
     const updates: Record<string, unknown> = {}
     if (body.status !== undefined) updates.status = body.status
     if (body.order !== undefined) updates.order = body.order

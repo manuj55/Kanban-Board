@@ -91,6 +91,87 @@ describe('POST /api/tasks', () => {
     expect(res.status).toBe(400)
     expect(res.body.message).toBe('Due date is required')
   })
+
+  it('returns 400 when dueDate is in the past', async () => {
+    const yesterday = new Date()
+    yesterday.setDate(yesterday.getDate() - 1)
+
+    const res = await request(app).post('/api/tasks').send({
+      title: 'Valid Title',
+      dueDate: yesterday.toISOString(),
+    })
+
+    expect(res.status).toBe(400)
+    expect(res.body.message).toBe('Due date cannot be in the past')
+  })
+
+  it('creates task with specified status "in-progress"', async () => {
+    ;(Task.countDocuments as jest.Mock).mockResolvedValue(1)
+    ;(Task.create as jest.Mock).mockResolvedValue({
+      ...mockTask,
+      status: 'in-progress',
+      order: 1,
+    })
+
+    const res = await request(app).post('/api/tasks').send({
+      title: 'In Progress Task',
+      status: 'in-progress',
+      dueDate: '2026-07-01T00:00:00.000Z',
+    })
+
+    expect(res.status).toBe(201)
+    expect(res.body.status).toBe('in-progress')
+    expect(res.body.order).toBe(1)
+    expect(Task.countDocuments).toHaveBeenCalledWith({ status: 'in-progress' })
+  })
+
+  it('creates task with specified status "done"', async () => {
+    ;(Task.countDocuments as jest.Mock).mockResolvedValue(0)
+    ;(Task.create as jest.Mock).mockResolvedValue({
+      ...mockTask,
+      status: 'done',
+      order: 0,
+    })
+
+    const res = await request(app).post('/api/tasks').send({
+      title: 'Done Task',
+      status: 'done',
+      dueDate: '2026-07-01T00:00:00.000Z',
+    })
+
+    expect(res.status).toBe(201)
+    expect(res.body.status).toBe('done')
+    expect(res.body.order).toBe(0)
+    expect(Task.countDocuments).toHaveBeenCalledWith({ status: 'done' })
+  })
+
+  it('defaults to "todo" status when not specified', async () => {
+    ;(Task.countDocuments as jest.Mock).mockResolvedValue(2)
+    ;(Task.create as jest.Mock).mockResolvedValue({
+      ...mockTask,
+      order: 2,
+    })
+
+    const res = await request(app).post('/api/tasks').send({
+      title: 'Task without status',
+      dueDate: '2026-07-01T00:00:00.000Z',
+    })
+
+    expect(res.status).toBe(201)
+    expect(res.body.status).toBe('todo')
+    expect(Task.countDocuments).toHaveBeenCalledWith({ status: 'todo' })
+  })
+
+  it('returns 400 for invalid status value', async () => {
+    const res = await request(app).post('/api/tasks').send({
+      title: 'Task with invalid status',
+      status: 'invalid-status',
+      dueDate: '2026-07-01T00:00:00.000Z',
+    })
+
+    expect(res.status).toBe(400)
+    expect(res.body.message).toBe('Status must be todo, in-progress, or done')
+  })
 })
 
 describe('PATCH /api/tasks/:id', () => {
@@ -423,6 +504,111 @@ describe('PATCH /api/tasks/:id', () => {
 
       expect(res.status).toBe(404)
       expect(res.body.message).toBe('Task not found')
+    })
+  })
+
+  describe('Same-column reordering', () => {
+    it('reorders task within same column from position 1 to 3', async () => {
+      const taskId = '507f1f77bcf86cd799439014'
+
+      // Current task at position 1 in "todo" column
+      const currentTask = {
+        _id: taskId,
+        status: 'todo',
+        order: 1,
+      }
+
+      // Other tasks in "todo" column (excluding current task)
+      const columnTasks = [
+        { _id: 'task0', status: 'todo', order: 0 },
+        { _id: 'task2', status: 'todo', order: 2 },
+        { _id: 'task3', status: 'todo', order: 3 },
+        { _id: 'task4', status: 'todo', order: 4 },
+      ]
+
+      const updatedTask = { ...currentTask, order: 3 }
+
+      ;(Task.findById as jest.Mock).mockResolvedValue(currentTask)
+
+      const columnFind = { sort: jest.fn().mockResolvedValue(columnTasks) }
+      ;(Task.find as jest.Mock).mockReturnValue(columnFind)
+
+      ;(Task.updateOne as jest.Mock).mockResolvedValue({ modifiedCount: 1 })
+      ;(Task.findByIdAndUpdate as jest.Mock).mockResolvedValue(updatedTask)
+
+      const res = await request(app)
+        .patch(`/api/tasks/${taskId}`)
+        .send({ order: 3 })
+
+      expect(res.status).toBe(200)
+      expect(res.body.order).toBe(3)
+
+      // Verify reindexing: tasks 0-2 stay at 0,1,2; task3 becomes 4; task4 becomes 5
+      expect(Task.updateOne).toHaveBeenCalledWith({ _id: 'task0' }, { order: 0 })
+      expect(Task.updateOne).toHaveBeenCalledWith({ _id: 'task2' }, { order: 1 })
+      expect(Task.updateOne).toHaveBeenCalledWith({ _id: 'task3' }, { order: 2 })
+      expect(Task.updateOne).toHaveBeenCalledWith({ _id: 'task4' }, { order: 4 })
+    })
+
+    it('reorders task within same column from position 3 to 0 (move to top)', async () => {
+      const taskId = '507f1f77bcf86cd799439015'
+
+      const currentTask = {
+        _id: taskId,
+        status: 'in-progress',
+        order: 3,
+      }
+
+      const columnTasks = [
+        { _id: 'task0', status: 'in-progress', order: 0 },
+        { _id: 'task1', status: 'in-progress', order: 1 },
+        { _id: 'task2', status: 'in-progress', order: 2 },
+      ]
+
+      const updatedTask = { ...currentTask, order: 0 }
+
+      ;(Task.findById as jest.Mock).mockResolvedValue(currentTask)
+
+      const columnFind = { sort: jest.fn().mockResolvedValue(columnTasks) }
+      ;(Task.find as jest.Mock).mockReturnValue(columnFind)
+
+      ;(Task.updateOne as jest.Mock).mockResolvedValue({ modifiedCount: 1 })
+      ;(Task.findByIdAndUpdate as jest.Mock).mockResolvedValue(updatedTask)
+
+      const res = await request(app)
+        .patch(`/api/tasks/${taskId}`)
+        .send({ order: 0 })
+
+      expect(res.status).toBe(200)
+      expect(res.body.order).toBe(0)
+
+      // All existing tasks shifted: 0→1, 1→2, 2→3
+      expect(Task.updateOne).toHaveBeenCalledWith({ _id: 'task0' }, { order: 1 })
+      expect(Task.updateOne).toHaveBeenCalledWith({ _id: 'task1' }, { order: 2 })
+      expect(Task.updateOne).toHaveBeenCalledWith({ _id: 'task2' }, { order: 3 })
+    })
+
+    it('does not reindex when order stays the same', async () => {
+      const taskId = '507f1f77bcf86cd799439016'
+
+      const currentTask = {
+        _id: taskId,
+        status: 'done',
+        order: 2,
+        title: 'Same order task',
+      }
+
+      const updated = { ...currentTask, title: 'Updated title' }
+
+      ;(Task.findById as jest.Mock).mockResolvedValue(currentTask)
+      ;(Task.findByIdAndUpdate as jest.Mock).mockResolvedValue(updated)
+
+      const res = await request(app)
+        .patch(`/api/tasks/${taskId}`)
+        .send({ order: 2, title: 'Updated title' })
+
+      expect(res.status).toBe(200)
+      expect(Task.updateOne).not.toHaveBeenCalled() // No reordering
     })
   })
 })
