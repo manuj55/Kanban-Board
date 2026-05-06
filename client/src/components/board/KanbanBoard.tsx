@@ -1,9 +1,11 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { useAppSelector } from '@/store/hooks';
-import { selectTasksLoading } from '@/store/slices/tasksSlice';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { fetchTasks, selectTasksLoading } from '@/store/slices/tasksSlice';
+import { selectCurrentTeamId } from '@/store/slices/teamsSlice';
+import { toast } from 'sonner';
 import KanbanColumn from './KanbanColumn';
 import BoardDnDProvider from './BoardDnDProvider';
 import SkeletonCard from './SkeletonCard';
@@ -16,6 +18,33 @@ export default function KanbanBoard() {
         { id: 'in-progress', title: 'In Progress' },
         { id: 'done', title: 'Done' },
     ] as const;
+
+    const dispatch = useAppDispatch();
+    const currentTeamId = useAppSelector(selectCurrentTeamId);
+    const lastFetchedTeamId = useRef<string | null>(null);
+
+    useEffect(() => {
+        if (!currentTeamId) return;
+
+        // Prevent fetching if already fetched for this team
+        if (lastFetchedTeamId.current === currentTeamId) return;
+        lastFetchedTeamId.current = currentTeamId;
+
+        const loadTasks = async () => {
+            try {
+                await dispatch(fetchTasks(currentTeamId)).unwrap();
+            } catch (error) {
+                const message = error instanceof Error ? error.message : 'Failed to load tasks';
+                toast.error(message, {
+                    action: {
+                        label: 'Retry',
+                        onClick: () => dispatch(fetchTasks(currentTeamId)),
+                    },
+                });
+            }
+        };
+        loadTasks();
+    }, [dispatch, currentTeamId]);
 
     const loading = useAppSelector(selectTasksLoading);
     const tasks = useAppSelector((state) => state.tasks.tasks);

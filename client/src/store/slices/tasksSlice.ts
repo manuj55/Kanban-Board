@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import { createAsyncThunk, createSlice, createSelector } from '@reduxjs/toolkit'
 import { api, extractErrorMessage } from '@/lib/api'
 import type { Task, TasksState, TaskStatus, CreateTaskInput, UpdateTaskInput } from '@/types'
 import { logoutUser } from './authSlice'
@@ -180,14 +180,31 @@ export const tasksReducer = tasksSlice.reducer
 // circular imports between slice → store → slice.
 // ═══════════════════════════════════════════════════════════════
 
+export const selectAllTasks = (state: { tasks: TasksState }) => state.tasks.tasks
+
+export const selectTasksGroupedByStatus = createSelector(
+  [selectAllTasks],
+  (tasks) => {
+    const grouped: Record<TaskStatus, Task[]> = {
+      'todo': [],
+      'in-progress': [],
+      'done': [],
+    }
+    tasks.forEach((task) => {
+      if (grouped[task.status]) {
+        grouped[task.status].push(task)
+      }
+    })
+    Object.values(grouped).forEach((list) => list.sort((a, b) => a.order - b.order))
+    return grouped
+  },
+)
+
 /** Select tasks for a specific column, sorted by order ascending */
 export const selectTasksByStatus =
   (status: TaskStatus) =>
   (state: { tasks: TasksState }): Task[] =>
-    state.tasks.tasks
-      .filter((task) => task.status === status)
-      .sort((a, b) => a.order - b.order)
+    selectTasksGroupedByStatus(state)[status] || []
 
-export const selectAllTasks = (state: { tasks: TasksState }) => state.tasks.tasks
 export const selectTasksLoading = (state: { tasks: TasksState }) => state.tasks.loading
 export const selectTasksError = (state: { tasks: TasksState }) => state.tasks.error
