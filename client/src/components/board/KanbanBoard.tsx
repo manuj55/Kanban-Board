@@ -4,10 +4,11 @@ import React from 'react';
 import Link from 'next/link';
 import { useAppSelector } from '@/store/hooks';
 import { selectTasksLoading } from '@/store/slices/tasksSlice';
-import { selectCurrentTeam } from '@/store/slices/teamsSlice';
 import KanbanColumn from './KanbanColumn';
 import BoardDnDProvider from './BoardDnDProvider';
 import SkeletonCard from './SkeletonCard';
+import TeamSwitcher from '@/components/team/TeamSwitcher';
+import UserMenu from '@/components/team/UserMenu';
 
 export default function KanbanBoard() {
     const COLUMNS = [
@@ -18,24 +19,24 @@ export default function KanbanBoard() {
 
     const loading = useAppSelector(selectTasksLoading);
     const tasks = useAppSelector((state) => state.tasks.tasks);
-    const currentTeam = useAppSelector(selectCurrentTeam);
     const isInitialLoad = loading && tasks.length === 0;
 
     return (
         <main className="flex-1 w-full max-w-[1280px] mx-auto px-sm sm:px-md md:px-lg py-sm sm:py-md md:py-lg overflow-hidden flex flex-col">
-            <div className="mb-md flex flex-col sm:flex-row sm:items-end justify-between gap-sm sm:gap-md border-b border-outline-variant/40 pb-sm">
-                <div className="flex flex-col gap-xs">
+            <div className="mb-md border-b border-outline-variant/40 pb-sm">
+                <div className="flex items-center justify-between gap-md mb-sm">
                     <h1 className="font-display text-headline-lg sm:text-headline-xl text-on-surface">Neura Flow</h1>
-                    <p className="text-body-sm text-on-surface-variant">
-                        {currentTeam ? currentTeam.name : 'Select a team'}
-                    </p>
+                    <UserMenu />
                 </div>
-                <Link
-                    href="/create"
-                    className="rounded-md px-md py-sm min-h-[44px] flex items-center justify-center text-label-md uppercase tracking-wider font-semibold bg-primary-container text-on-primary-container transition-colors hover:brightness-95"
-                >
-                    New task
-                </Link>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-sm sm:gap-md">
+                    <TeamSwitcher />
+                    <Link
+                        href="/create"
+                        className="rounded-md px-md py-sm min-h-[44px] flex items-center justify-center text-label-md uppercase tracking-wider font-semibold bg-primary-container text-on-primary-container transition-colors hover:brightness-95"
+                    >
+                        New task
+                    </Link>
+                </div>
             </div>
 
             {isInitialLoad ? (

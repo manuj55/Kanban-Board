@@ -91,7 +91,7 @@ router.get('/', async (req: Request, res: Response) => {
     teams.map((team) => formatTeamResponse(team)),
   )
 
-  res.json(formattedTeams)
+  res.json({ teams: formattedTeams })
 })
 
 // POST /api/teams — Create new team (creator becomes owner)
@@ -116,7 +116,7 @@ router.post(
 
     const formattedTeam = await formatTeamResponse(team)
 
-    res.status(201).json(formattedTeam)
+    res.status(201).json({ team: formattedTeam })
   },
 )
 

@@ -5,11 +5,9 @@ interface ApiTeam {
   _id: string
   name: string
   members: Array<{
-    userId: {
-      _id: string
-      name: string
-      email: string
-    }
+    userId: string
+    email: string
+    name: string
     role: 'owner' | 'member'
     joinedAt: string
   }>
@@ -23,9 +21,9 @@ function normalizeTeam(apiTeam: ApiTeam): Team {
     id: apiTeam._id,
     name: apiTeam.name,
     members: apiTeam.members.map((m) => ({
-      userId: m.userId._id,
-      email: m.userId.email,
-      name: m.userId.name,
+      userId: m.userId,
+      email: m.email,
+      name: m.name,
       role: m.role,
       joinedAt: m.joinedAt,
     })),

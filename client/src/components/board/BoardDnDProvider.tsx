@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
     DndContext,
     closestCorners,
@@ -25,9 +25,14 @@ function BoardDnDProviderInner({ children }: { children: React.ReactNode }) {
     const currentTeamId = useAppSelector(selectCurrentTeamId);
     const { setDragState } = useDrag();
     const { setOpenMenuId } = useMenu();
+    const lastFetchedTeamId = useRef<string | null>(null);
 
     useEffect(() => {
         if (!currentTeamId) return;
+
+        // Prevent fetching if already fetched for this team
+        if (lastFetchedTeamId.current === currentTeamId) return;
+        lastFetchedTeamId.current = currentTeamId;
 
         const loadTasks = async () => {
             try {
