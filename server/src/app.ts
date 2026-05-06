@@ -2,7 +2,9 @@ import express from 'express'
 import cors from 'cors'
 import helmet from 'helmet'
 import morgan from 'morgan'
+import cookieParser from 'cookie-parser'
 import { taskRoutes } from './routes/tasks'
+import { authRoutes } from './routes/auth'
 import { errorHandler } from './middleware/errorHandler'
 
 const app = express()
@@ -14,6 +16,7 @@ app.use(
 )
 app.use(morgan('dev'))
 app.use(express.json())
+app.use(cookieParser())
 
 // Health check
 app.get('/api/health', (_req, res) => {
@@ -21,6 +24,7 @@ app.get('/api/health', (_req, res) => {
 })
 
 // Routes
+app.use('/api/auth', authRoutes)
 app.use('/api/tasks', taskRoutes)
 
 // Error handler (must be last)

@@ -85,3 +85,39 @@ export const validateObjectId = [
   param('id').isMongoId().withMessage('Invalid task ID'),
   handleValidationErrors,
 ]
+
+/** POST /api/auth/register */
+export const validateRegister = [
+  body('email')
+    .trim()
+    .notEmpty()
+    .withMessage('Email is required')
+    .isEmail()
+    .withMessage('Invalid email format')
+    .normalizeEmail(),
+  body('password')
+    .notEmpty()
+    .withMessage('Password is required')
+    .isLength({ min: 6 })
+    .withMessage('Password must be at least 6 characters'),
+  body('name')
+    .trim()
+    .notEmpty()
+    .withMessage('Name is required')
+    .isLength({ max: 100 })
+    .withMessage('Name cannot exceed 100 characters'),
+  handleValidationErrors,
+]
+
+/** POST /api/auth/login */
+export const validateLogin = [
+  body('email')
+    .trim()
+    .notEmpty()
+    .withMessage('Email is required')
+    .isEmail()
+    .withMessage('Invalid email format')
+    .normalizeEmail(),
+  body('password').notEmpty().withMessage('Password is required'),
+  handleValidationErrors,
+]

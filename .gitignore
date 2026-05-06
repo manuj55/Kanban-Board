@@ -31,6 +31,7 @@ Thumbs.db
 
 # agent skills
 .agents/*
+.claude/*
 implementation_plan.md
 requirements.txt
 requirements_analysis.md
