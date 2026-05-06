@@ -1,6 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { api, extractErrorMessage } from '@/lib/api'
 import type { Task, TasksState, TaskStatus, CreateTaskInput, UpdateTaskInput } from '@/types'
+import { logoutUser } from './authSlice'
+import type { RootState } from '@/store/store'
 
 // ─── Initial State ───
 const initialState: TasksState = {
@@ -13,17 +15,22 @@ const initialState: TasksState = {
 // Async Thunks — the ONLY place that imports and calls api.ts
 // ═══════════════════════════════════════════════════════════════
 
-export const fetchTasks = createAsyncThunk<Task[], void, { rejectValue: string }>(
-  'tasks/fetchTasks',
-  async (_, { rejectWithValue }) => {
-    try {
-      const { data } = await api.get<Task[]>('/tasks')
-      return data
-    } catch (error) {
-      return rejectWithValue(extractErrorMessage(error))
+export const fetchTasks = createAsyncThunk<
+  Task[],
+  string | undefined,
+  { rejectValue: string; state: RootState }
+>('tasks/fetchTasks', async (teamId, { rejectWithValue, getState }) => {
+  try {
+    const effectiveTeamId = teamId ?? getState().teams.currentTeamId
+    if (!effectiveTeamId) {
+      return []
     }
-  },
-)
+    const { data } = await api.get<Task[]>(`/tasks?teamId=${effectiveTeamId}`)
+    return data
+  } catch (error) {
+    return rejectWithValue(extractErrorMessage(error))
+  }
+})
 
 export const createTask = createAsyncThunk<Task, CreateTaskInput, { rejectValue: string }>(
   'tasks/createTask',
@@ -69,7 +76,12 @@ export const deleteTask = createAsyncThunk<string, string, { rejectValue: string
 const tasksSlice = createSlice({
   name: 'tasks',
   initialState,
-  reducers: {},
+  reducers: {
+    clearTasks: (state) => {
+      state.tasks = []
+      state.error = null
+    },
+  },
   extraReducers: (builder) => {
     // ─── fetchTasks ───
     builder
@@ -150,9 +162,16 @@ const tasksSlice = createSlice({
         state.error = action.payload ?? 'Failed to delete task'
         state.loading = false
       })
+
+    // ─── Listen to logout ───
+    builder.addCase(logoutUser.fulfilled, (state) => {
+      state.tasks = []
+      state.error = null
+    })
   },
 })
 
+export const { clearTasks } = tasksSlice.actions
 export const tasksReducer = tasksSlice.reducer
 
 // ═══════════════════════════════════════════════════════════════

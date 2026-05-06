@@ -15,31 +15,35 @@ import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import { toast } from 'sonner';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { updateTask, fetchTasks } from '@/store/slices/tasksSlice';
+import { selectCurrentTeamId } from '@/store/slices/teamsSlice';
 import { DragProvider, useDrag } from './DragContext';
 import { MenuProvider, useMenu } from './MenuContext';
 
 function BoardDnDProviderInner({ children }: { children: React.ReactNode }) {
     const dispatch = useAppDispatch();
     const tasks = useAppSelector((state) => state.tasks.tasks);
+    const currentTeamId = useAppSelector(selectCurrentTeamId);
     const { setDragState } = useDrag();
     const { setOpenMenuId } = useMenu();
 
     useEffect(() => {
+        if (!currentTeamId) return;
+
         const loadTasks = async () => {
             try {
-                await dispatch(fetchTasks()).unwrap();
+                await dispatch(fetchTasks(currentTeamId)).unwrap();
             } catch (error) {
                 const message = error instanceof Error ? error.message : 'Failed to load tasks';
                 toast.error(message, {
                     action: {
                         label: 'Retry',
-                        onClick: () => dispatch(fetchTasks()),
+                        onClick: () => dispatch(fetchTasks(currentTeamId)),
                     },
                 });
             }
         };
         loadTasks();
-    }, [dispatch]);
+    }, [dispatch, currentTeamId]);
 
     const sensors = useSensors(
         usePointerSensor(),

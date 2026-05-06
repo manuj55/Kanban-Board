@@ -12,6 +12,7 @@ import {
     selectTasksError,
     selectTasksLoading,
 } from '@/store/slices/tasksSlice';
+import { selectCurrentTeamId } from '@/store/slices/teamsSlice';
 import type { CreateTaskInput, TaskStatus } from '@/types';
 import FormField from '@/components/ui/FormField';
 import Input from '@/components/ui/Input';
@@ -55,6 +56,7 @@ export default function CreateTaskForm() {
     const router = useRouter();
     const loading = useAppSelector(selectTasksLoading);
     const error = useAppSelector(selectTasksError);
+    const currentTeamId = useAppSelector(selectCurrentTeamId);
 
     const {
         register,
@@ -73,12 +75,18 @@ export default function CreateTaskForm() {
     const isBusy = loading || isSubmitting;
 
     const onSubmit = async (values: CreateTaskFormValues) => {
+        if (!currentTeamId) {
+            toast.error('No team selected. Please select a team first.');
+            return;
+        }
+
         const description = values.description?.trim();
         const payload: CreateTaskInput = {
             title: values.title,
             status: values.status,
             description: description && description.length > 0 ? description : undefined,
             dueDate: new Date(`${values.dueDate}T00:00:00`).toISOString(),
+            teamId: currentTeamId,
         };
 
         try {
@@ -93,6 +101,11 @@ export default function CreateTaskForm() {
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-md">
+            {!currentTeamId && (
+                <div className="border border-error/40 bg-error-container text-on-error-container text-body-sm rounded px-md py-sm">
+                    No team selected. Please select a team to create tasks.
+                </div>
+            )}
             {error && (
                 <div className="border border-error/40 bg-error-container text-on-error-container text-body-sm rounded px-md py-sm">
                     {error}
@@ -160,6 +173,7 @@ export default function CreateTaskForm() {
                     className="bg-primary-container text-on-primary-container hover:brightness-95"
                     loading={isBusy}
                     loadingText="Creating…"
+                    disabled={isBusy || !currentTeamId}
                 >
                     Create task
                 </Button>

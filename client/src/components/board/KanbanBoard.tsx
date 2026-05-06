@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { useAppSelector } from '@/store/hooks';
 import { selectTasksLoading } from '@/store/slices/tasksSlice';
+import { selectCurrentTeam } from '@/store/slices/teamsSlice';
 import KanbanColumn from './KanbanColumn';
 import BoardDnDProvider from './BoardDnDProvider';
 import SkeletonCard from './SkeletonCard';
@@ -17,6 +18,7 @@ export default function KanbanBoard() {
 
     const loading = useAppSelector(selectTasksLoading);
     const tasks = useAppSelector((state) => state.tasks.tasks);
+    const currentTeam = useAppSelector(selectCurrentTeam);
     const isInitialLoad = loading && tasks.length === 0;
 
     return (
@@ -24,7 +26,9 @@ export default function KanbanBoard() {
             <div className="mb-md flex flex-col sm:flex-row sm:items-end justify-between gap-sm sm:gap-md border-b border-outline-variant/40 pb-sm">
                 <div className="flex flex-col gap-xs">
                     <h1 className="font-display text-headline-lg sm:text-headline-xl text-on-surface">Neura Flow</h1>
-                    <p className="text-body-sm text-on-surface-variant">Cognitive Task Pipeline</p>
+                    <p className="text-body-sm text-on-surface-variant">
+                        {currentTeam ? currentTeam.name : 'Select a team'}
+                    </p>
                 </div>
                 <Link
                     href="/create"

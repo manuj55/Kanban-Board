@@ -14,7 +14,7 @@ export interface Task {
   status: TaskStatus
   order: number
   dueDate: string // ISO 8601 string (serializable for Redux)
-  teamId?: string // optional now, required when bonus is built
+  teamId: string // required for team-scoped boards
   createdAt: string
   updatedAt: string
   // UI-only snapshot fields for optimistic update rollback (never sent to server)
@@ -28,6 +28,7 @@ export interface CreateTaskInput {
   status: TaskStatus
   description?: string
   dueDate: string
+  teamId: string // required for team-scoped boards
 }
 
 // ─── Update/Move Input (drag-drop, dropdown, and edit) ───
@@ -44,36 +45,11 @@ export interface TasksState {
 }
 
 // ═══════════════════════════════════════════════════════════════
-// Bonus-ready types (Step 2 — auth + teams)
-// Defined now to avoid future refactoring.
+// Auth & Team Types
+// Defined in separate files for better organization.
+// Import from client/src/types/auth.ts and client/src/types/team.ts
 // ═══════════════════════════════════════════════════════════════
 
-// ─── User ───
-export interface User {
-  _id: string
-  name: string
-  email: string
-  teams: string[]
-}
-
-// ─── Team ───
-export interface Team {
-  _id: string
-  name: string
-  members: User[]
-  createdBy: string
-}
-
-// ─── Redux: Auth State ───
-export interface AuthState {
-  user: User | null
-  token: string | null
-  loading: boolean
-  error: string | null
-}
-
-// ─── Auth API Response ───
-export interface AuthResponse {
-  token: string
-  user: User
-}
+// Re-export for convenience
+export type { User, AuthResponse, LoginCredentials, RegisterCredentials, AuthState } from './auth'
+export type { TeamRole, TeamMember, Team, CreateTeamInput, AddMemberInput, TeamsState } from './team'

@@ -11,6 +11,8 @@ import {
   selectTasksLoading,
   selectTasksError,
 } from './tasksSlice'
+import { teamsReducer } from './teamsSlice'
+import { authReducer } from './authSlice'
 import type { Task, TasksState } from '@/types'
 
 // ─── Mock api.ts ───
@@ -31,9 +33,15 @@ import { api } from '@/lib/api'
 // ─── Helpers ───
 function createTestStore(preloadedTasks?: Partial<TasksState>) {
   return configureStore({
-    reducer: { tasks: tasksReducer },
+    reducer: {
+      tasks: tasksReducer,
+      teams: teamsReducer,
+      auth: authReducer,
+    },
     preloadedState: {
       tasks: { tasks: [], loading: false, error: null, ...preloadedTasks },
+      teams: { teams: [], currentTeamId: 'test-team-id', loading: false, error: null },
+      auth: { user: null, token: null, loading: false, error: null },
     },
   })
 }
@@ -45,6 +53,7 @@ function mockTask(overrides: Partial<Task> = {}): Task {
     status: 'todo',
     order: 0,
     dueDate: '2026-06-01T00:00:00.000Z',
+    teamId: 'test-team-id',
     createdAt: '2026-05-01T00:00:00.000Z',
     updatedAt: '2026-05-01T00:00:00.000Z',
     ...overrides,
@@ -93,7 +102,12 @@ describe('tasksSlice', () => {
 
       const store = createTestStore({ tasks: [mockTask({ _id: '1' })] })
       await store.dispatch(
-        createTask({ title: 'New Task', status: 'todo', dueDate: '2026-06-01' }),
+        createTask({
+          title: 'New Task',
+          status: 'todo',
+          dueDate: '2026-06-01',
+          teamId: 'test-team-id',
+        }),
       )
 
       expect(store.getState().tasks.tasks).toHaveLength(2)
