@@ -63,4 +63,4 @@ userSchema.methods.comparePassword = async function (
 // Index for efficient email lookups
 userSchema.index({ email: 1 })
 
-export const User = model<IUserDocument>('User', userSchema)
+export const User = model<IUser>('User', userSchema)

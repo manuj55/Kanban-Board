@@ -29,6 +29,11 @@ export const validateCreateTask = [
     .optional()
     .isIn(['todo', 'in-progress', 'done'])
     .withMessage('Status must be todo, in-progress, or done'),
+  body('teamId')
+    .notEmpty()
+    .withMessage('Team ID is required')
+    .isMongoId()
+    .withMessage('Invalid team ID'),
   body('dueDate')
     .notEmpty()
     .withMessage('Due date is required')

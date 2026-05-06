@@ -5,6 +5,7 @@ import morgan from 'morgan'
 import cookieParser from 'cookie-parser'
 import { taskRoutes } from './routes/tasks'
 import { authRoutes } from './routes/auth'
+import { teamRoutes } from './routes/teams'
 import { errorHandler } from './middleware/errorHandler'
 
 const app = express()
@@ -25,6 +26,7 @@ app.get('/api/health', (_req, res) => {
 
 // Routes
 app.use('/api/auth', authRoutes)
+app.use('/api/teams', teamRoutes)
 app.use('/api/tasks', taskRoutes)
 
 // Error handler (must be last)

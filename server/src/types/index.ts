@@ -28,12 +28,41 @@ export interface LoginBody {
   password: string
 }
 
+// ─── Team Types ───
+export type TeamRole = 'owner' | 'member'
+
+export interface TeamMemberResponse {
+  userId: string
+  email: string
+  name: string
+  role: TeamRole
+  joinedAt: string
+}
+
+export interface TeamResponse {
+  _id: string
+  name: string
+  createdBy: string
+  members: TeamMemberResponse[]
+  createdAt: string
+  updatedAt: string
+}
+
+export interface CreateTeamBody {
+  name: string
+}
+
+export interface AddTeamMemberBody {
+  email: string
+}
+
 // ─── API request body for creating a task ───
 export interface CreateTaskBody {
   title: string
   description?: string
   dueDate: string // ISO 8601 string from client
   status?: TaskStatus
+  teamId: string
 }
 
 // ─── API request body for moving/updating a task ───

@@ -11,23 +11,35 @@ import {
 
 const router = Router()
 
-// GET / — fetch all tasks sorted by order ascending
-router.get('/', async (_req: Request, res: Response) => {
-  const tasks = await Task.find({}).sort({ order: 1 })
+// GET / — fetch all tasks for a team sorted by order ascending
+router.get('/', async (req: Request, res: Response) => {
+  const { teamId } = req.query
+
+  if (!teamId || typeof teamId !== 'string') {
+    throw ApiError.badRequest('teamId query parameter is required')
+  }
+
+  const tasks = await Task.find({ teamId }).sort({ order: 1 })
   res.json(tasks)
 })
 
 // POST / — create task with specified status (defaults to 'todo')
 router.post('/', validateCreateTask, async (req: Request, res: Response) => {
-  const { title, description, dueDate, status } = req.body as CreateTaskBody
+  const { title, description, dueDate, status, teamId } = req.body as CreateTaskBody
+
+  if (!teamId) {
+    throw ApiError.badRequest('teamId is required')
+  }
+
   const taskStatus = status || 'todo'
-  const order = await Task.countDocuments({ status: taskStatus })
+  const order = await Task.countDocuments({ status: taskStatus, teamId })
   const task = await Task.create({
     title,
     description: description || '',
     status: taskStatus,
     order,
     dueDate: new Date(dueDate),
+    teamId,
   })
   res.status(201).json(task)
 })
@@ -50,8 +62,11 @@ router.patch(
 
     // If moving to new column, reindex both source and target
     if (isColumnChange) {
+      const teamId = currentTask.teamId
+
       // Get all tasks in target column (excluding this task)
       const targetColumnTasks = await Task.find({
+        teamId,
         status: newStatus,
         _id: { $ne: id },
       }).sort({ order: 1 })
@@ -70,6 +85,7 @@ router.patch(
 
       // Reindex source column: remove gap
       const sourceColumnTasks = await Task.find({
+        teamId,
         status: oldStatus,
         _id: { $ne: id },
       }).sort({ order: 1 })
@@ -99,8 +115,11 @@ router.patch(
     const isSameColumnReorder = body.order !== undefined && body.order !== currentTask.order
 
     if (isSameColumnReorder) {
+      const teamId = currentTask.teamId
+
       // Get all tasks in current column sorted by order
       const columnTasks = await Task.find({
+        teamId,
         status: currentTask.status,
         _id: { $ne: id },
       }).sort({ order: 1 })
@@ -159,6 +178,7 @@ router.delete(
 
     // Reindex remaining tasks in the deleted task's column
     const remainingTasks = await Task.find({
+      teamId: task.teamId,
       status: task.status,
     }).sort({ order: 1 })
 

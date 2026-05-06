@@ -8,7 +8,7 @@ export interface ITask {
   status: 'todo' | 'in-progress' | 'done'
   order: number
   dueDate: Date
-  teamId?: Types.ObjectId // optional now, required when bonus is built
+  teamId: Types.ObjectId // required for team-scoped boards
 }
 
 // ─── Interface: Mongoose document (adds _id, timestamps, methods) ───
@@ -53,7 +53,7 @@ const taskSchema = new Schema<ITask>(
     teamId: {
       type: Schema.Types.ObjectId,
       ref: 'Team',
-      required: false,
+      required: [true, 'Team ID is required'],
     },
   },
   { timestamps: true },

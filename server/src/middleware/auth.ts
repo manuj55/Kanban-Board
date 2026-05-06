@@ -1,5 +1,6 @@
 import type { Request, Response, NextFunction } from 'express'
 import { User } from '../models/User'
+import type { IUserDocument } from '../models/User'
 import { verifyToken } from '../utils/jwt'
 import { ApiError } from '../utils/ApiError'
 
@@ -29,7 +30,7 @@ export const requireAuth = async (
     }
 
     // Find user by ID from token payload
-    const user = await User.findById(payload.userId)
+    const user = (await User.findById(payload.userId)) as IUserDocument | null
     if (!user) {
       throw ApiError.unauthorized('User not found')
     }
