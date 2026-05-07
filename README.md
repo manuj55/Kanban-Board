@@ -14,6 +14,8 @@ MongoDB Atlas
 
 ***
 
+For this project, Claude was used primarily at the architectural level: defining backend/frontend boundaries, state management patterns with Redux Toolkit, and codifying non‑negotiable rules and constraints in `CLAUDE.md` (folder structure, TypeScript strictness, API layering, and acceptance gates). Gemini was then used more on the UI side to help refine component structure and visual details while still following the architectural rules and design tokens already established in `CLAUDE.md` and `DESIGN.md`.
+
 ## Tech Stack
 
 ### Frontend
