@@ -11,13 +11,11 @@ const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/neura-
 async function seed() {
   try {
     await mongoose.connect(MONGODB_URI)
-    console.log('✓ Connected to MongoDB')
 
     // Clear existing data
     await Task.deleteMany({})
     await User.deleteMany({})
     await Team.deleteMany({})
-    console.log('✓ Cleared existing data')
 
     // Create multiple users
     const demoUser = await User.create({
@@ -44,7 +42,6 @@ async function seed() {
       password: 'bob123',
     })
 
-    console.log('✓ Created 4 users (Demo, Manu, Veda, Bob)')
 
     // Create teams with multiple members
     const engineeringTeam = await Team.create({
@@ -108,11 +105,6 @@ async function seed() {
       ],
     })
 
-    console.log('✓ Created 3 teams with multiple members:')
-    console.log('  - Engineering: Demo (owner), Manu, Bob')
-    console.log('  - Design: Demo (owner), Bob, Veda')
-    console.log('  - Marketing: Manu (owner), Veda')
-
     // Seed tasks for Engineering team
     const engineeringTasks = [
       // To Do
@@ -165,15 +157,8 @@ async function seed() {
     ]
 
     await Task.insertMany([...engineeringTasks, ...designTasks, ...marketingTasks])
-    console.log('✓ Seeded 27 tasks (10 Engineering, 7 Design, 7 Marketing)')
 
     await mongoose.disconnect()
-    console.log('✓ Disconnected from MongoDB\n✅ Seed complete!')
-    console.log('\n📝 Login credentials:')
-    console.log('   Demo User:  demo@neuraflow.com  / demo123   (Owner: Engineering, Design)')
-    console.log('   Manu:       manu@neuraflow.com  / manu123   (Owner: Marketing | Member: Engineering)')
-    console.log('   Bob:        bob@neuraflow.com   / bob123    (Member: Engineering, Design)')
-    console.log('   Veda:       veda@neuraflow.com  / veda123   (Member: Design, Marketing)\n')
     process.exit(0)
   } catch (error) {
     console.error('❌ Seed failed:', error)
