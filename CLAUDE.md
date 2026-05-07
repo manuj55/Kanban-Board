@@ -127,6 +127,16 @@ Always read [DESIGN.md](technical-interview/DESIGN.md) before implementing any U
 - When in doubt about a visual decision, defer to [DESIGN.md](technical-interview/DESIGN.md) over personal judgment or external references.
 - If a design decision is not covered in [DESIGN.md](technical-interview/DESIGN.md), flag it before implementing rather than improvising.
 
+### Layout & Form Container Best Practices
+
+When implementing auth pages, forms, or centered content:
+
+- **Set explicit width on containers**: Always use `w-full` on form/card wrappers, even when parent has width constraints. Without it, flex children can collapse to content width.
+- **Copy working layout patterns first**: Before creating auth/form pages, copy the structure from working siblings (e.g., `/create` page: `w-full max-w-[720px] mx-auto` → `section` wrapper → form). Customize content, not structure.
+- **Verify at breakpoints before committing**: After layout changes, test at 375px (mobile), 768px (tablet), 1024px (desktop). If text wraps per-character or cards look crushed, width classes are missing.
+- **Avoid nested centering wrappers**: Prefer single-level centering (`max-w-* mx-auto`) over nested flex containers with `justify-center`. Simpler DOM = fewer layout bugs.
+- **Route group layouts should be minimal**: Layout files like `(auth)/layout.tsx` should handle auth logic only, not visual layout. Let pages control their own layout structure (like `(protected)` does).
+
 ## Next.js App Router Rules
 
 **CRITICAL: Always add `'use client'` directive when components use:**

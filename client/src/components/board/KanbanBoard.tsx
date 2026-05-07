@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
-import Link from 'next/link';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { fetchTasks, selectTasksLoading } from '@/store/slices/tasksSlice';
 import { selectCurrentTeamId } from '@/store/slices/teamsSlice';
@@ -9,8 +8,6 @@ import { toast } from 'sonner';
 import KanbanColumn from './KanbanColumn';
 import BoardDnDProvider from './BoardDnDProvider';
 import SkeletonCard from './SkeletonCard';
-import TeamSwitcher from '@/components/team/TeamSwitcher';
-import UserMenu from '@/components/team/UserMenu';
 
 export default function KanbanBoard() {
     const COLUMNS = [
@@ -51,25 +48,9 @@ export default function KanbanBoard() {
     const isInitialLoad = loading && tasks.length === 0;
 
     return (
-        <main className="flex-1 w-full max-w-[1280px] mx-auto px-sm sm:px-md md:px-lg py-sm sm:py-md md:py-lg overflow-hidden flex flex-col">
-            <div className="mb-md border-b border-outline-variant/40 pb-sm">
-                <div className="flex items-center justify-between gap-md mb-sm">
-                    <h1 className="font-display text-headline-lg sm:text-headline-xl text-on-surface">Neura Flow</h1>
-                    <UserMenu />
-                </div>
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-sm sm:gap-md">
-                    <TeamSwitcher />
-                    <Link
-                        href="/create"
-                        className="rounded-md px-md py-sm min-h-[44px] flex items-center justify-center text-label-md uppercase tracking-wider font-semibold bg-primary-container text-on-primary-container transition-colors hover:brightness-95"
-                    >
-                        New task
-                    </Link>
-                </div>
-            </div>
-
+        <>
             {isInitialLoad ? (
-                <div className="flex flex-1 flex-col md:flex-row gap-sm md:gap-gutter md:overflow-x-auto md:snap-x md:snap-mandatory pb-md">
+                <div className="flex flex-1 flex-col md:flex-row gap-sm md:gap-gutter md:overflow-x-auto md:snap-x md:snap-mandatory pb-md w-full">
                     {COLUMNS.map((col) => (
                         <div
                             key={col.id}
@@ -90,13 +71,13 @@ export default function KanbanBoard() {
                 </div>
             ) : (
                 <BoardDnDProvider>
-                    <div className="flex flex-1 flex-col md:flex-row gap-sm md:gap-gutter md:overflow-x-auto md:snap-x md:snap-mandatory pb-md">
+                    <div className="flex flex-1 flex-col md:flex-row gap-sm md:gap-gutter md:overflow-x-auto md:snap-x md:snap-mandatory pb-md w-full">
                         {COLUMNS.map((col) => (
                             <KanbanColumn key={col.id} status={col.id} title={col.title} />
                         ))}
                     </div>
                 </BoardDnDProvider>
             )}
-        </main>
+        </>
     );
 }
