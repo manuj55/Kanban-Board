@@ -1,8 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import { useAppSelector } from '@/store/hooks';
-import { selectCurrentTeam } from '@/store/slices/teamsSlice';
 import TeamSwitcher from '@/components/team/TeamSwitcher';
 import UserMenu from '@/components/team/UserMenu';
 
@@ -15,28 +13,26 @@ export default function ProtectedHeader({
   currentPage,
   showNewTaskButton = true,
 }: ProtectedHeaderProps) {
-  const currentTeam = useAppSelector(selectCurrentTeam);
 
   return (
     <header className="w-full bg-surface">
       <div className="w-full py-md">
         {/* Row 1: Title + User Menu */}
-        <div className="flex items-center justify-between gap-md mb-sm pb-sm border-b border-outline-variant/40 px-sm sm:px-md md:px-lg">
+        <div className="flex items-center justify-between gap-md mb-sm pb-sm border-b border-outline-variant px-sm sm:px-md md:px-lg">
           <div className="flex flex-col gap-xs">
             <h1 className="font-display text-headline-lg sm:text-headline-xl text-on-surface">
               Neura Flow
             </h1>
-            <p className="text-body-lg text-on-surface-variant">
-              Team: {currentTeam ? currentTeam.name : 'Select a team'}
-            </p>
           </div>
           <UserMenu />
         </div>
 
+
         {/* Row 2: Breadcrumb + Controls */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-sm sm:gap-md pt-xs max-w-[1280px] mx-auto px-sm sm:px-md md:px-lg">
           {/* Breadcrumb */}
-          <nav aria-label="Breadcrumb" className="flex items-center gap-xs text-body-sm text-on-surface-variant">
+
+          <nav aria-label="Breadcrumb" className="flex items-center gap-xs text-body-sm text-on-surface-variant px-sm sm:px-md md:px-lg mb-sm">
             {currentPage === 'board' ? (
               <span>Board</span>
             ) : (
@@ -55,6 +51,7 @@ export default function ProtectedHeader({
 
           {/* Controls */}
           <div className="flex items-center gap-sm">
+            <span className="text-body-md text-on-surface-variant">Team:</span>
             <TeamSwitcher />
             {showNewTaskButton && (
               <Link

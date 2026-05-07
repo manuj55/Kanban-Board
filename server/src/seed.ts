@@ -19,15 +19,34 @@ async function seed() {
     await Team.deleteMany({})
     console.log('✓ Cleared existing data')
 
-    // Create demo user
+    // Create multiple users
     const demoUser = await User.create({
       name: 'Demo User',
       email: 'demo@neuraflow.com',
       password: 'demo123', // Will be hashed by pre-save hook
     })
-    console.log('✓ Created demo user (email: demo@neuraflow.com, password: demo123)')
 
-    // Create teams
+    const manu = await User.create({
+      name: 'Manu Janardhana',
+      email: 'manu@neuraflow.com',
+      password: 'manu123',
+    })
+
+    const veda = await User.create({
+      name: 'Veda Kumar',
+      email: 'veda@neuraflow.com',
+      password: 'veda123',
+    })
+
+    const bob = await User.create({
+      name: 'Bob Smith',
+      email: 'bob@neuraflow.com',
+      password: 'bob123',
+    })
+
+    console.log('✓ Created 4 users (Demo, Manu, Veda, Bob)')
+
+    // Create teams with multiple members
     const engineeringTeam = await Team.create({
       name: 'Engineering',
       createdBy: demoUser._id,
@@ -35,7 +54,17 @@ async function seed() {
         {
           userId: demoUser._id,
           role: 'owner',
-          joinedAt: new Date(),
+          joinedAt: new Date('2026-04-01'),
+        },
+        {
+          userId: manu._id,
+          role: 'member',
+          joinedAt: new Date('2026-04-10'),
+        },
+        {
+          userId: bob._id,
+          role: 'member',
+          joinedAt: new Date('2026-04-15'),
         },
       ],
     })
@@ -47,12 +76,42 @@ async function seed() {
         {
           userId: demoUser._id,
           role: 'owner',
-          joinedAt: new Date(),
+          joinedAt: new Date('2026-04-01'),
+        },
+        {
+          userId: bob._id,
+          role: 'member',
+          joinedAt: new Date('2026-04-12'),
+        },
+        {
+          userId: veda._id,
+          role: 'member',
+          joinedAt: new Date('2026-04-20'),
         },
       ],
     })
 
-    console.log('✓ Created 2 teams (Engineering, Design)')
+    const marketingTeam = await Team.create({
+      name: 'Marketing',
+      createdBy: manu._id,
+      members: [
+        {
+          userId: manu._id,
+          role: 'owner',
+          joinedAt: new Date('2026-04-05'),
+        },
+        {
+          userId: veda._id,
+          role: 'member',
+          joinedAt: new Date('2026-04-18'),
+        },
+      ],
+    })
+
+    console.log('✓ Created 3 teams with multiple members:')
+    console.log('  - Engineering: Demo (owner), Manu, Bob')
+    console.log('  - Design: Demo (owner), Bob, Veda')
+    console.log('  - Marketing: Manu (owner), Veda')
 
     // Seed tasks for Engineering team
     const engineeringTasks = [
@@ -78,6 +137,7 @@ async function seed() {
       // To Do
       { title: 'Create brand guidelines', description: 'Define colors, typography, and spacing', status: 'todo', order: 0, dueDate: new Date('2026-05-16'), teamId: designTeam._id },
       { title: 'Design mobile mockups', description: 'Create responsive layouts', status: 'todo', order: 1, dueDate: new Date('2026-05-14'), teamId: designTeam._id },
+      { title: 'Redesign landing page', description: 'Update hero section and CTAs', status: 'todo', order: 2, dueDate: new Date('2026-05-22'), teamId: designTeam._id },
 
       // In Progress
       { title: 'User research interviews', description: 'Conduct 5 user interviews', status: 'in-progress', order: 0, dueDate: new Date('2026-05-11'), teamId: designTeam._id },
@@ -88,14 +148,32 @@ async function seed() {
       { title: 'Icon library setup', description: 'Organize and document icons', status: 'done', order: 1, dueDate: new Date('2026-05-05'), teamId: designTeam._id },
     ]
 
-    await Task.insertMany([...engineeringTasks, ...designTasks])
-    console.log('✓ Seeded 16 tasks (10 Engineering, 6 Design)')
+    // Seed tasks for Marketing team
+    const marketingTasks = [
+      // To Do
+      { title: 'Plan Q2 campaign', description: 'Outline marketing strategy for Q2', status: 'todo', order: 0, dueDate: new Date('2026-05-17'), teamId: marketingTeam._id },
+      { title: 'Write blog post', description: 'Article about new features', status: 'todo', order: 1, dueDate: new Date('2026-05-19'), teamId: marketingTeam._id },
+      { title: 'Update social media', description: 'Schedule posts for the month', status: 'todo', order: 2, dueDate: new Date('2026-05-21'), teamId: marketingTeam._id },
+
+      // In Progress
+      { title: 'Create email campaign', description: 'Newsletter for product launch', status: 'in-progress', order: 0, dueDate: new Date('2026-05-10'), teamId: marketingTeam._id },
+      { title: 'Analyze metrics', description: 'Review Q1 performance data', status: 'in-progress', order: 1, dueDate: new Date('2026-05-12'), teamId: marketingTeam._id },
+
+      // Done
+      { title: 'Setup analytics', description: 'Configure Google Analytics', status: 'done', order: 0, dueDate: new Date('2026-05-02'), teamId: marketingTeam._id },
+      { title: 'Launch landing page', description: 'Published new landing page', status: 'done', order: 1, dueDate: new Date('2026-05-03'), teamId: marketingTeam._id },
+    ]
+
+    await Task.insertMany([...engineeringTasks, ...designTasks, ...marketingTasks])
+    console.log('✓ Seeded 27 tasks (10 Engineering, 7 Design, 7 Marketing)')
 
     await mongoose.disconnect()
     console.log('✓ Disconnected from MongoDB\n✅ Seed complete!')
     console.log('\n📝 Login credentials:')
-    console.log('   Email: demo@neuraflow.com')
-    console.log('   Password: demo123\n')
+    console.log('   Demo User:  demo@neuraflow.com  / demo123   (Owner: Engineering, Design)')
+    console.log('   Manu:       manu@neuraflow.com  / manu123   (Owner: Marketing | Member: Engineering)')
+    console.log('   Bob:        bob@neuraflow.com   / bob123    (Member: Engineering, Design)')
+    console.log('   Veda:       veda@neuraflow.com  / veda123   (Member: Design, Marketing)\n')
     process.exit(0)
   } catch (error) {
     console.error('❌ Seed failed:', error)
