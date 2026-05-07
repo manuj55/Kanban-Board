@@ -2,6 +2,16 @@
 
 A full-stack Kanban-style task management application built with the MERN stack, featuring real-time drag-and-drop, team collaboration, and user authentication.
 
+Kanban Board:
+- <img width="800" height="355" alt="ezgif-8fb1fdd1c90102d5" src="https://github.com/user-attachments/assets/dbe2bc37-d0e9-4f7e-b7ce-a961c5adcdea" />
+
+Create Task: 
+- <img width="800" height="355" alt="Create task gif" src="https://github.com/user-attachments/assets/3d021c92-b4fd-475e-baea-230bc8757212" />
+
+MongoDB Atlas
+- <img width="800" height="355" alt="MongoDB Atlas" src="https://github.com/user-attachments/assets/2fb51115-21a8-4c2f-9ca5-ca9e0114d15e" />
+
+
 ***
 
 ## Tech Stack
